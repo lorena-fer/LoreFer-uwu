@@ -25,7 +25,6 @@ body{
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
     animation: brillo 6s linear infinite, float 3s infinite;
-    text-shadow:0 10px 25px rgba(0,0,0,0.2);
 }
 
 @keyframes brillo{
@@ -63,6 +62,11 @@ button{
     background:#ff4d88;
     color:white;
     margin:5px;
+    cursor:pointer;
+}
+
+button:hover{
+    transform:scale(1.05);
 }
 
 /* CARD */
@@ -71,6 +75,11 @@ button{
     margin:10px;
     padding:10px;
     border-radius:10px;
+    cursor:pointer;
+}
+
+.delete-btn{
+    background:#ff6b6b;
 }
 </style>
 </head>
@@ -88,12 +97,15 @@ button{
 <br>
 
 <button onclick="agregar()">Agregar</button>
+<button onclick="actualizar()">Actualizar</button>
 
 <div id="lista"></div>
 
 </div>
 
 <script>
+
+let seleccionado = null;
 
 // OBTENER
 function obtenerDatos(){
@@ -113,14 +125,26 @@ function cargar(){
 
     data.forEach((item,index)=>{
         lista.innerHTML += `
-        <div class="card">
+        <div class="card" onclick="seleccionar(${index})">
             <b>${item.nombre}</b><br>
             ${item.serie}<br>
             ${item.desc}<br>
-            <button onclick="eliminar(${index})">Eliminar</button>
+            <button class="delete-btn" onclick="event.stopPropagation(); eliminar(${index})">Eliminar</button>
         </div>
         `;
     });
+}
+
+// SELECCIONAR
+function seleccionar(index){
+    let data = obtenerDatos();
+    let item = data[index];
+
+    seleccionado = index;
+
+    document.getElementById("nombre").value = item.nombre;
+    document.getElementById("serie").value = item.serie;
+    document.getElementById("desc").value = item.desc;
 }
 
 // AGREGAR
@@ -132,6 +156,26 @@ function agregar(){
         serie:document.getElementById("serie").value,
         desc:document.getElementById("desc").value
     });
+
+    guardarDatos(data);
+    limpiar();
+    cargar();
+}
+
+// ACTUALIZAR
+function actualizar(){
+    if(seleccionado === null){
+        alert("Selecciona un producto");
+        return;
+    }
+
+    let data = obtenerDatos();
+
+    data[seleccionado] = {
+        nombre:document.getElementById("nombre").value,
+        serie:document.getElementById("serie").value,
+        desc:document.getElementById("desc").value
+    };
 
     guardarDatos(data);
     limpiar();
@@ -151,8 +195,10 @@ function limpiar(){
     document.getElementById("nombre").value="";
     document.getElementById("serie").value="";
     document.getElementById("desc").value="";
+    seleccionado=null;
 }
 
+// INICIAR
 cargar();
 
 </script>
