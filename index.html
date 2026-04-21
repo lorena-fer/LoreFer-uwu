@@ -55,14 +55,21 @@ input{
 }
 
 /* BOTONES */
+.btn-group{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
 button{
     padding:10px 15px;
     border:none;
     border-radius:12px;
     background:#ff4d88;
     color:white;
-    margin:5px;
     cursor:pointer;
+    transition:0.3s;
 }
 
 button:hover{
@@ -94,17 +101,17 @@ button:hover{
 <input id="serie" placeholder="Serie">
 <input id="desc" placeholder="Descripción">
 
-<br>
-
-<button onclick="agregar()">Agregar</button>
-<button onclick="actualizar()">Actualizar</button>
+<!-- 🔥 BOTONES JUNTOS -->
+<div class="btn-group">
+    <button onclick="agregar()">Agregar</button>
+    <button onclick="actualizar()">Actualizar</button>
+</div>
 
 <div id="lista"></div>
 
 </div>
 
 <script>
-
 let seleccionado = null;
 
 // OBTENER
@@ -200,7 +207,6 @@ function limpiar(){
 
 // INICIAR
 cargar();
-
 </script>
 
 </body>
