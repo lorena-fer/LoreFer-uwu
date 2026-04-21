@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>LoFer</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&family=Pacifico&display=swap" rel="stylesheet">
+
+<style>
+body{
+    margin:0;
+    font-family:'Poppins', sans-serif;
+    background: linear-gradient(135deg,#ffd6e0,#ffc2d1,#ffb3c6);
+    text-align:center;
+}
+
+/* LOGO */
+.logo{
+    font-family:'Pacifico';
+    font-size:65px;
+    margin-top:20px;
+    background: linear-gradient(45deg,#ff4d88,#ff8fab,#ffc2d1,#ff4d88);
+    background-size:300%;
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    animation: brillo 6s linear infinite, float 3s infinite;
+    text-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+@keyframes brillo{
+    0%{background-position:0%;}
+    100%{background-position:300%;}
+}
+
+@keyframes float{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-10px);}
+}
+
+.container{
+    background:rgba(255,255,255,0.3);
+    backdrop-filter:blur(15px);
+    margin:20px;
+    padding:20px;
+    border-radius:20px;
+}
+
+/* INPUTS */
+input{
+    width:90%;
+    padding:12px;
+    margin:6px;
+    border:none;
+    border-radius:12px;
+}
+
+/* BOTONES */
+button{
+    padding:10px 15px;
+    border:none;
+    border-radius:12px;
+    background:#ff4d88;
+    color:white;
+    margin:5px;
+}
+
+/* CARD */
+.card{
+    background:rgba(255,255,255,0.5);
+    margin:10px;
+    padding:10px;
+    border-radius:10px;
+}
+</style>
+</head>
+
+<body>
+
+<h1 class="logo">LoFer</h1>
+
+<div class="container">
+
+<input id="nombre" placeholder="Nombre">
+<input id="serie" placeholder="Serie">
+<input id="desc" placeholder="Descripción">
+
+<br>
+
+<button onclick="agregar()">Agregar</button>
+
+<div id="lista"></div>
+
+</div>
+
+<script>
+
+// OBTENER
+function obtenerDatos(){
+    return JSON.parse(localStorage.getItem("inventario")) || [];
+}
+
+// GUARDAR
+function guardarDatos(data){
+    localStorage.setItem("inventario", JSON.stringify(data));
+}
+
+// MOSTRAR
+function cargar(){
+    let data = obtenerDatos();
+    let lista = document.getElementById("lista");
+    lista.innerHTML = "";
+
+    data.forEach((item,index)=>{
+        lista.innerHTML += `
+        <div class="card">
+            <b>${item.nombre}</b><br>
+            ${item.serie}<br>
+            ${item.desc}<br>
+            <button onclick="eliminar(${index})">Eliminar</button>
+        </div>
+        `;
+    });
+}
+
+// AGREGAR
+function agregar(){
+    let data = obtenerDatos();
+
+    data.push({
+        nombre:document.getElementById("nombre").value,
+        serie:document.getElementById("serie").value,
+        desc:document.getElementById("desc").value
+    });
+
+    guardarDatos(data);
+    limpiar();
+    cargar();
+}
+
+// ELIMINAR
+function eliminar(index){
+    let data = obtenerDatos();
+    data.splice(index,1);
+    guardarDatos(data);
+    cargar();
+}
+
+// LIMPIAR
+function limpiar(){
+    document.getElementById("nombre").value="";
+    document.getElementById("serie").value="";
+    document.getElementById("desc").value="";
+}
+
+cargar();
+
+</script>
+
+</body>
+</html>
